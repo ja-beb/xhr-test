@@ -1,0 +1,17 @@
+
+body{
+    margin: 5ex auto;
+    width: 75%;
+}
+
+.Radio-Option{
+    display: inline-block;
+}
+.Radio-Option + .Radio-Option{
+    margin-left: 3ex;
+}
+
+#output{
+    height: 25ex;
+    width: 50ex;
+}

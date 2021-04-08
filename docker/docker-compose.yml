@@ -1,0 +1,39 @@
+version: "3.7"
+services: 
+    http_server:
+        image: nginx:alpine
+        container_name: "http-server"
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+            - ../www:/var/www/html:ro
+        networks:
+            - network-public
+            - network-private
+        ports:
+            - 80:80
+        restart: always
+        depends_on:
+            - php-fpm
+        links: 
+            - php-fpm
+
+    php-fpm:
+        image: php:fpm-alpine
+        container_name: "http-php"
+        volumes:
+            - ./www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+            - ./php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+            - ./config.ini:/usr/local/etc/php/conf.d/config.ini:ro
+            - ../www:/var/www/html:ro
+        networks:
+            - network-private
+        restart: always
+
+networks:
+    network-public:
+        driver: bridge
+        internal: false
+        
+    network-private:
+        driver: bridge
+        internal: true

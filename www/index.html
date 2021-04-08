@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test XHR Promises</title>
+        <link rel="stylesheet" href="http://localhost/style/base.css">
+    </head>
+    <body>
+        <form id="testForm" method="POST" class="Form">
+            <div class="Form-Entry">
+                <label>HTTP Method:</label>
+                <div class="Radio-Option">
+                    <input type="radio" name="method" id="method-get" value="1">
+                    <label for="method-get">GET</label>
+                </div>
+                <div class="Radio-Option">
+                    <input type="radio" name="method" id="method-post" value="2">
+                    <label for="method-post">POST</label>
+                </div>
+            </div>
+            <div class="Form-Entry">
+                <div class="">
+                    <input type="checkbox" name="is-error" id="is-error" value="true">
+                    <label for="is-error">Is Error</label>
+                </div>
+            </div>
+            <div class="Form-Entry">
+                <textarea disabled id="testResults"></textarea>
+            </div>
+            <div class="Form-Entry Form-Controls">
+                <button class="" id="" type="submit" name="" value="">
+                    <span class="">Run Test</span>
+                </button>
+            </div>
+        </form>
+        <script src="http://cdn.localhost/script/base.js"></script>
+        <script defer>            
+            document.addEventListener("DOMContentLoaded", e => {
+                document.getElementById('testForm').addEventListener('submit', e => {
+                    e.preventDefault();
+                    const write_results = (method,msg) => document.getElementById('testResults').value = `${method}\n${msg}`;
+                    const is_error = document.getElementById('is-error');
+                    if ( document.getElementById("method-get").checked ){
+                        if ( is_error )
+                        {
+                            console.log('error + get');
+                            test_xhr_get_error = () => xhr.get("http://localhost/api/404.php")
+                                .then(x => write_results('get', x))
+                                .catch(x => write_results('get:error', x));
+                        }
+                        else
+                            xhr.get("http://localhost/api/message.php")   
+                                .then(x => write_results('get', x))
+                                .catch(x => write_results('get:error', x));                        
+                    }else if ( document.getElementById("method-post").checked ){
+                        if ( is_error )
+                            xhr.post('http://localhost/api/user.php', {'name': 'username'})
+                                .then(x => write_results('post', x))
+                                .catch(x => console.log(x));
+                        else
+                            xhr.post('http://localhost/api/user.php', {'name': 'username', 'role_id': 12})   
+                                .then(x => write_results('post', x))
+                                .catch(x => write_results('post', x));
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
